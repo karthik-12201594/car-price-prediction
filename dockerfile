@@ -20,7 +20,8 @@ RUN pip install --no-cache-dir \
     scikit-learn \
     matplotlib \
     seaborn \
-    jupyter
+    jupyter \
+    statsmodels  # Added statsmodels
 
 # Expose port for Jupyter Notebook
 EXPOSE 8888
