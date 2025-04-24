@@ -4,17 +4,11 @@ FROM python:3.10-slim
 # Set working directory inside the container
 WORKDIR /app
 
-# Install required OS dependencies
+# Install required OS dependencies and Python dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy your files into the container
-COPY Car\ Price\ Prediction.ipynb ./Car_Price_Prediction.ipynb
-COPY CarPrice_Assignment\ \(1\).csv ./CarPrice_Assignment.csv
-
-# Install Python dependencies
-RUN pip install --no-cache-dir \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir \
     pandas \
     numpy \
     scikit-learn \
@@ -22,6 +16,10 @@ RUN pip install --no-cache-dir \
     seaborn \
     jupyter \
     statsmodels  # Added statsmodels
+
+# Copy your files into the container
+COPY "car_price_prediction.ipynb" ./car-price_prediction.ipynb
+COPY "car_price_assignment.csv" ./car_Price_assignment.csv
 
 # Expose port for Jupyter Notebook
 EXPOSE 8888
