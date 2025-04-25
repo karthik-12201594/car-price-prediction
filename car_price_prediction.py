@@ -26,10 +26,11 @@ from sklearn.metrics import mean_squared_error
 
 import warnings
 warnings.filterwarnings('ignore')
+
 import matplotlib.pyplot as plt
-# import other libraries
 
-
+# After plotting, add this to show the figure
+plt.show()
 
 
 
