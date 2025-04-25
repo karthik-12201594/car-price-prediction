@@ -29,12 +29,19 @@ warnings.filterwarnings('ignore')
 
 import matplotlib.pyplot as plt
 
-# After plotting, add this to show the figure
+# Example plot
+plt.plot([1, 2, 3], [4, 5, 6])  # Example plotting code
+plt.title('Car Price Prediction')
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+
+# Explicitly call plt.show() to display the plot
 plt.show()
 
 
 
-## get_ipython().run_line_magic('matplotlib', 'inline')
+
+
 
 
 # ## Importing the dataset
