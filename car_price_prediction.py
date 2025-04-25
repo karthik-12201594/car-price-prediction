@@ -5,7 +5,7 @@
 
 # ## Importing the required libraries
 
-# In[4]:
+# In[140]:
 
 
 import numpy as np
@@ -30,28 +30,29 @@ warnings.filterwarnings('ignore')
 
 # ## Importing the dataset
 
-# In[5]:
+# In[141]:
 
 
-cars_data = pd.read_csv(r"C:\Users\karth\OneDrive\Desktop\car-price-prediction\car_price_assignment.csv")
+cars_data = pd.read_csv("car_price_assignment.csv")
+
 cars_data.head()
 
 
 # ## Analyzing the dataset
 
-# In[6]:
+# In[142]:
 
 
 cars_data.shape
 
 
-# In[7]:
+# In[143]:
 
 
 cars_data.info()
 
 
-# In[8]:
+# In[144]:
 
 
 cars_data.describe()
@@ -59,25 +60,25 @@ cars_data.describe()
 
 # # Data Cleaning
 
-# In[9]:
+# In[145]:
 
 
 cars_data.duplicated(subset = ['car_ID']).sum()
 
 
-# In[10]:
+# In[146]:
 
 
 cars_data = cars_data.drop(['car_ID'], axis =1)
 
 
-# In[11]:
+# In[147]:
 
 
 cars_data.isnull().sum()
 
 
-# In[12]:
+# In[148]:
 
 
 cars_data['symboling'].value_counts()
@@ -85,13 +86,13 @@ cars_data['symboling'].value_counts()
 
 # #### The 'symboling' column is represented as the insurance risk rating i.e; +3 indicates that the auto is risky, -3 that it is probably pretty safe.   
 
-# In[13]:
+# In[149]:
 
 
 sns.pairplot(y_vars = 'symboling', x_vars = 'price' ,data = cars_data)
 
 
-# In[14]:
+# In[150]:
 
 
 cars_data['CarName'].value_counts()
@@ -99,25 +100,25 @@ cars_data['CarName'].value_counts()
 
 # #### From the above data we can infer that the car name comprises of two parts i.e; the car company and the car model. 
 
-# In[15]:
+# In[151]:
 
 
 cars_data['car_company'] = cars_data['CarName'].apply(lambda x:x.split(' ')[0])
 
 
-# In[16]:
+# In[152]:
 
 
 cars_data.head()
 
 
-# In[17]:
+# In[153]:
 
 
 cars_data = cars_data.drop(['CarName'], axis =1)
 
 
-# In[18]:
+# In[154]:
 
 
 cars_data['car_company'].value_counts()
@@ -125,7 +126,7 @@ cars_data['car_company'].value_counts()
 
 # #### From the above data we can see that some of car_company names has been misspelled. Hence we need to fix it.
 
-# In[19]:
+# In[155]:
 
 
 cars_data['car_company'].replace('toyouta', 'toyota',inplace=True)
@@ -136,25 +137,25 @@ cars_data['car_company'].replace('vw', 'volkswagen',inplace=True)
 cars_data['car_company'].replace('porcshce', 'porsche',inplace=True)
 
 
-# In[20]:
+# In[156]:
 
 
 cars_data['car_company'].value_counts()
 
 
-# In[21]:
+# In[157]:
 
 
 cars_data['fueltype'].value_counts()
 
 
-# In[22]:
+# In[158]:
 
 
 cars_data['aspiration'].value_counts()
 
 
-# In[23]:
+# In[159]:
 
 
 cars_data['doornumber'].value_counts()
@@ -162,7 +163,7 @@ cars_data['doornumber'].value_counts()
 
 # #### Converting the doornumber variable into numeric variable
 
-# In[24]:
+# In[160]:
 
 
 def number_(x):
@@ -171,63 +172,63 @@ def number_(x):
 cars_data['doornumber'] = cars_data[['doornumber']].apply(number_)
 
 
-# In[25]:
+# In[161]:
 
 
 cars_data['doornumber'].value_counts()
 
 
-# In[26]:
+# In[162]:
 
 
 cars_data['carbody'].value_counts()
 
 
-# In[27]:
+# In[163]:
 
 
 cars_data['drivewheel'].value_counts()
 
 
-# In[28]:
+# In[164]:
 
 
 cars_data['enginelocation'].value_counts()
 
 
-# In[29]:
+# In[165]:
 
 
 cars_data['wheelbase'].value_counts().head()
 
 
-# In[30]:
+# In[166]:
 
 
 sns.histplot(cars_data['wheelbase'])
 plt.show()
 
 
-# In[31]:
+# In[167]:
 
 
 cars_data['carlength'].value_counts().head()
 
 
-# In[32]:
+# In[ ]:
 
 
 sns.histplot(cars_data['carlength'])
 plt.show()
 
 
-# In[33]:
+# In[ ]:
 
 
 cars_data['enginetype'].value_counts()
 
 
-# In[34]:
+# In[ ]:
 
 
 cars_data['cylindernumber'].value_counts()
@@ -235,7 +236,7 @@ cars_data['cylindernumber'].value_counts()
 
 # #### We need to convert this categorical variable into numerical variable. 
 
-# In[35]:
+# In[ ]:
 
 
 def convert_number(x):
@@ -244,13 +245,13 @@ def convert_number(x):
 cars_data['cylindernumber'] = cars_data[['cylindernumber']].apply(convert_number)
 
 
-# In[36]:
+# In[ ]:
 
 
 cars_data['cylindernumber'].value_counts()
 
 
-# In[37]:
+# In[ ]:
 
 
 cars_data['fuelsystem'].value_counts()
@@ -258,14 +259,14 @@ cars_data['fuelsystem'].value_counts()
 
 # # Data Visualization
 
-# In[38]:
+# In[ ]:
 
 
 cars_numeric = cars_data.select_dtypes(include =['int64','float64'])
 cars_numeric.head()
 
 
-# In[39]:
+# In[ ]:
 
 
 plt.figure(figsize = (30,30))
@@ -275,7 +276,7 @@ plt.show()
 
 # ### Since there are a lot of columns in the dataset, we can't find out the correlation using the above plot between the variables. So for this we need to plot heatmap.
 
-# In[40]:
+# In[ ]:
 
 
 import seaborn as sns
@@ -303,14 +304,14 @@ plt.show()
 # 
 # #### There are many independent variables which are highly correlated: wheelbase, carlength, curbweight, enginesize etc.. all are positively correlated.
 
-# In[41]:
+# In[ ]:
 
 
 categorical_cols = cars_data.select_dtypes(include = ['object'])
 categorical_cols.head()
 
 
-# In[42]:
+# In[ ]:
 
 
 plt.figure(figsize = (20,12))
@@ -330,7 +331,7 @@ plt.subplot(3,3,7)
 sns.boxplot(x = 'fuelsystem', y = 'price', data = cars_data)
 
 
-# In[43]:
+# In[ ]:
 
 
 plt.figure(figsize = (20,12))
@@ -351,26 +352,26 @@ sns.boxplot(x = 'car_company', y = 'price', data = cars_data)
 
 # # Data Preprocessing
 
-# In[44]:
+# In[ ]:
 
 
 cars_dummies = pd.get_dummies(categorical_cols, drop_first = True)
 cars_dummies.head()
 
 
-# In[45]:
+# In[ ]:
 
 
 car_df  = pd.concat([cars_data, cars_dummies], axis =1)
 
 
-# In[46]:
+# In[ ]:
 
 
 car_df = car_df.drop(['fueltype', 'aspiration', 'carbody', 'drivewheel', 'enginelocation', 'enginetype', 'fuelsystem', 'car_company'], axis =1)
 
 
-# In[47]:
+# In[ ]:
 
 
 car_df.info()
@@ -378,19 +379,19 @@ car_df.info()
 
 # ## Performing the train_test_split operation 
 
-# In[48]:
+# In[ ]:
 
 
 df_train, df_test = train_test_split(car_df, train_size = 0.7, test_size = 0.3, random_state = 100)
 
 
-# In[49]:
+# In[ ]:
 
 
 df_train.shape
 
 
-# In[50]:
+# In[ ]:
 
 
 df_test.shape
@@ -398,32 +399,32 @@ df_test.shape
 
 # ## Scaling the data using StandardScaler()
 
-# In[51]:
+# In[ ]:
 
 
 cars_numeric.columns
 
 
-# In[52]:
+# In[ ]:
 
 
 col_list = ['symboling', 'doornumber', 'wheelbase', 'carlength', 'carwidth','carheight', 'curbweight', 'cylindernumber', 'enginesize', 'boreratio',
             'stroke', 'compressionratio', 'horsepower', 'peakrpm', 'citympg', 'highwaympg', 'price']
 
 
-# In[53]:
+# In[ ]:
 
 
 scaler = StandardScaler()
 
 
-# In[54]:
+# In[ ]:
 
 
 df_train[col_list] = scaler.fit_transform(df_train[col_list])
 
 
-# In[55]:
+# In[ ]:
 
 
 df_train.describe()
@@ -431,7 +432,7 @@ df_train.describe()
 
 # # Model Building
 
-# In[56]:
+# In[ ]:
 
 
 y_train = df_train.pop('price')
@@ -440,7 +441,7 @@ X_train = df_train
 
 # ## Performing feature selection using Recursive Feature Elimination (RFE)
 
-# In[57]:
+# In[ ]:
 
 
 from sklearn.feature_selection import RFE
@@ -456,13 +457,13 @@ rfe = RFE(estimator=lr, n_features_to_select=15)
 rfe.fit(X_train, y_train)
 
 
-# In[58]:
+# In[ ]:
 
 
 list(zip(X_train.columns,rfe.support_,rfe.ranking_))
 
 
-# In[59]:
+# In[ ]:
 
 
 cols = X_train.columns[rfe.support_]
@@ -471,20 +472,20 @@ cols
 
 # ## Model 1
 
-# In[92]:
+# In[ ]:
 
 
 print(X1_sm.dtypes)
 print(y_train.dtype)
 
 
-# In[93]:
+# In[ ]:
 
 
 X1 = X1.astype(float)
 
 
-# In[94]:
+# In[ ]:
 
 
 # Drop any rows with NaNs in X1 or y_train
@@ -500,7 +501,7 @@ lr_1 = sm.OLS(y_clean, X1_sm).fit()
 print(lr_1.summary())
 
 
-# In[96]:
+# In[ ]:
 
 
 X1 = pd.get_dummies(X_train[cols], drop_first=True)
@@ -526,7 +527,7 @@ lr_1 = sm.OLS(y_train, X1_sm).fit()
 print(lr_1.summary())
 
 
-# In[97]:
+# In[ ]:
 
 
 print(lr_1.summary())
@@ -534,20 +535,20 @@ print(lr_1.summary())
 
 # #### All the p- values are significant. Let us check VIF.
 
-# In[98]:
+# In[ ]:
 
 
 X1 = X1.replace([np.inf, -np.inf], np.nan)  # Replace infinite values with NaN
 X1 = X1.fillna(X1.median())  # Replace NaN values with the median of each column
 
 
-# In[99]:
+# In[ ]:
 
 
 X1 = X1.astype(int)
 
 
-# In[100]:
+# In[ ]:
 
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -565,7 +566,7 @@ print(vif)
 
 # ### Now building the model with 10 variables.
 
-# In[101]:
+# In[ ]:
 
 
 from sklearn.feature_selection import RFE
@@ -580,13 +581,13 @@ selected_features = X_train.columns[rfe2.support_]
 print(selected_features)
 
 
-# In[102]:
+# In[ ]:
 
 
 list(zip(X_train.columns,rfe2.support_,rfe2.ranking_))
 
 
-# In[103]:
+# In[ ]:
 
 
 supported_cols = X_train.columns[rfe2.support_]
@@ -861,7 +862,7 @@ Model_5 = sm.OLS(y_train,X5_sm).fit()
 print(Model_5.summary())
 
 
-# In[141]:
+# In[123]:
 
 
 vif = pd.DataFrame()
@@ -876,7 +877,7 @@ vif
 
 # ## Model 6
 
-# In[142]:
+# In[124]:
 
 
 X6 = X5.drop(['enginetype_l'], axis =1)
@@ -885,13 +886,13 @@ X6_sm = sm.add_constant(X6)
 Model_6 = sm.OLS(y_train,X6_sm).fit()
 
 
-# In[143]:
+# In[125]:
 
 
 print(Model_6.summary())
 
 
-# In[144]:
+# In[126]:
 
 
 vif = pd.DataFrame()
@@ -906,20 +907,20 @@ vif
 
 # # Residual Analysis
 
-# In[145]:
+# In[127]:
 
 
 y_train_pred = Model_6.predict(X6_sm)
 y_train_pred.head()
 
 
-# In[146]:
+# In[128]:
 
 
 Residual = y_train- y_train_pred
 
 
-# In[148]:
+# In[129]:
 
 
 sns.histplot(Residual, bins =15)
@@ -927,26 +928,26 @@ sns.histplot(Residual, bins =15)
 
 # ### Now we need to make predictions on our model.
 
-# In[149]:
+# In[130]:
 
 
 df_test[col_list] = scaler.transform(df_test[col_list])
 
 
-# In[150]:
+# In[131]:
 
 
 y_test = df_test.pop('price')
 X_test = df_test
 
 
-# In[151]:
+# In[132]:
 
 
 final_cols = X6.columns
 
 
-# In[153]:
+# In[133]:
 
 
 import statsmodels.api as sm
@@ -963,25 +964,25 @@ X_test_model6 = X_test[final_cols]
 X_test_model6.head()
 
 
-# In[154]:
+# In[134]:
 
 
 X_test_sm = sm.add_constant(X_test_model6)
 
 
-# In[155]:
+# In[135]:
 
 
 y_pred = Model_6.predict(X_test_sm)
 
 
-# In[156]:
+# In[136]:
 
 
 y_pred.head()
 
 
-# In[166]:
+# In[137]:
 
 
 plt.scatter(y_test, y_pred)
@@ -993,7 +994,7 @@ plt.ylabel('y_pred')
 
 # # Model Evaluation
 
-# In[167]:
+# In[138]:
 
 
 r_squ = r2_score(y_test,y_pred)
@@ -1004,7 +1005,7 @@ r_squ
 
 # ### enginesize, carwidth, enginetype_rotor, car_company_bmw, enginelocation_rear, car_company_renault
 
-# In[1]:
+# In[139]:
 
 
 get_ipython().system('jupyter nbconvert --to script car_price_prediction.ipynb')
