@@ -5,7 +5,7 @@
 
 # ## Importing the required libraries
 
-# In[2]:
+# In[4]:
 
 
 import numpy as np
@@ -27,47 +27,31 @@ from sklearn.metrics import mean_squared_error
 import warnings
 warnings.filterwarnings('ignore')
 
-import matplotlib.pyplot as plt
-
-# Example plot
-plt.plot([1, 2, 3], [4, 5, 6])  # Example plotting code
-plt.title('Car Price Prediction')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-
-# Explicitly call plt.show() to display the plot
-plt.show()
-
-
-
-
-
-
 
 # ## Importing the dataset
 
-# In[3]:
+# In[5]:
 
 
-cars_data = pd.read_csv(r"C:\Users\karth\Downloads\Geely-Car-Price-Prediction-master\Geely-Car-Price-Prediction-master\CarPrice_Assignment (1).csv")
+cars_data = pd.read_csv(r"C:\Users\karth\OneDrive\Desktop\car-price-prediction\car_price_assignment.csv")
 cars_data.head()
 
 
 # ## Analyzing the dataset
 
-# In[4]:
+# In[6]:
 
 
 cars_data.shape
 
 
-# In[5]:
+# In[7]:
 
 
 cars_data.info()
 
 
-# In[6]:
+# In[8]:
 
 
 cars_data.describe()
@@ -75,25 +59,25 @@ cars_data.describe()
 
 # # Data Cleaning
 
-# In[7]:
+# In[9]:
 
 
 cars_data.duplicated(subset = ['car_ID']).sum()
 
 
-# In[8]:
+# In[10]:
 
 
 cars_data = cars_data.drop(['car_ID'], axis =1)
 
 
-# In[9]:
+# In[11]:
 
 
 cars_data.isnull().sum()
 
 
-# In[10]:
+# In[12]:
 
 
 cars_data['symboling'].value_counts()
@@ -101,13 +85,13 @@ cars_data['symboling'].value_counts()
 
 # #### The 'symboling' column is represented as the insurance risk rating i.e; +3 indicates that the auto is risky, -3 that it is probably pretty safe.   
 
-# In[11]:
+# In[13]:
 
 
 sns.pairplot(y_vars = 'symboling', x_vars = 'price' ,data = cars_data)
 
 
-# In[12]:
+# In[14]:
 
 
 cars_data['CarName'].value_counts()
@@ -115,25 +99,25 @@ cars_data['CarName'].value_counts()
 
 # #### From the above data we can infer that the car name comprises of two parts i.e; the car company and the car model. 
 
-# In[13]:
+# In[15]:
 
 
 cars_data['car_company'] = cars_data['CarName'].apply(lambda x:x.split(' ')[0])
 
 
-# In[14]:
+# In[16]:
 
 
 cars_data.head()
 
 
-# In[15]:
+# In[17]:
 
 
 cars_data = cars_data.drop(['CarName'], axis =1)
 
 
-# In[16]:
+# In[18]:
 
 
 cars_data['car_company'].value_counts()
@@ -141,7 +125,7 @@ cars_data['car_company'].value_counts()
 
 # #### From the above data we can see that some of car_company names has been misspelled. Hence we need to fix it.
 
-# In[17]:
+# In[19]:
 
 
 cars_data['car_company'].replace('toyouta', 'toyota',inplace=True)
@@ -152,39 +136,22 @@ cars_data['car_company'].replace('vw', 'volkswagen',inplace=True)
 cars_data['car_company'].replace('porcshce', 'porsche',inplace=True)
 
 
-# In[18]:
+# In[20]:
 
 
 cars_data['car_company'].value_counts()
 
 
-# In[19]:
+# In[21]:
 
 
 cars_data['fueltype'].value_counts()
 
 
-# In[20]:
-
-
-cars_data['aspiration'].value_counts()
-
-
-# In[21]:
-
-
-cars_data['doornumber'].value_counts()
-
-
-# #### Converting the doornumber variable into numeric variable
-
 # In[22]:
 
 
-def number_(x):
-    return x.map({'four':4, 'two': 2})
-    
-cars_data['doornumber'] = cars_data[['doornumber']].apply(number_)
+cars_data['aspiration'].value_counts()
 
 
 # In[23]:
@@ -193,38 +160,55 @@ cars_data['doornumber'] = cars_data[['doornumber']].apply(number_)
 cars_data['doornumber'].value_counts()
 
 
+# #### Converting the doornumber variable into numeric variable
+
 # In[24]:
 
 
-cars_data['carbody'].value_counts()
+def number_(x):
+    return x.map({'four':4, 'two': 2})
+    
+cars_data['doornumber'] = cars_data[['doornumber']].apply(number_)
 
 
 # In[25]:
 
 
-cars_data['drivewheel'].value_counts()
+cars_data['doornumber'].value_counts()
 
 
 # In[26]:
 
 
-cars_data['enginelocation'].value_counts()
+cars_data['carbody'].value_counts()
 
 
 # In[27]:
 
 
-cars_data['wheelbase'].value_counts().head()
+cars_data['drivewheel'].value_counts()
+
+
+# In[28]:
+
+
+cars_data['enginelocation'].value_counts()
 
 
 # In[29]:
+
+
+cars_data['wheelbase'].value_counts().head()
+
+
+# In[30]:
 
 
 sns.histplot(cars_data['wheelbase'])
 plt.show()
 
 
-# In[30]:
+# In[31]:
 
 
 cars_data['carlength'].value_counts().head()
@@ -291,7 +275,7 @@ plt.show()
 
 # ### Since there are a lot of columns in the dataset, we can't find out the correlation using the above plot between the variables. So for this we need to plot heatmap.
 
-# In[42]:
+# In[40]:
 
 
 import seaborn as sns
@@ -319,14 +303,14 @@ plt.show()
 # 
 # #### There are many independent variables which are highly correlated: wheelbase, carlength, curbweight, enginesize etc.. all are positively correlated.
 
-# In[43]:
+# In[41]:
 
 
 categorical_cols = cars_data.select_dtypes(include = ['object'])
 categorical_cols.head()
 
 
-# In[44]:
+# In[42]:
 
 
 plt.figure(figsize = (20,12))
@@ -346,7 +330,7 @@ plt.subplot(3,3,7)
 sns.boxplot(x = 'fuelsystem', y = 'price', data = cars_data)
 
 
-# In[45]:
+# In[43]:
 
 
 plt.figure(figsize = (20,12))
@@ -367,26 +351,26 @@ sns.boxplot(x = 'car_company', y = 'price', data = cars_data)
 
 # # Data Preprocessing
 
-# In[46]:
+# In[44]:
 
 
 cars_dummies = pd.get_dummies(categorical_cols, drop_first = True)
 cars_dummies.head()
 
 
-# In[47]:
+# In[45]:
 
 
 car_df  = pd.concat([cars_data, cars_dummies], axis =1)
 
 
-# In[48]:
+# In[46]:
 
 
 car_df = car_df.drop(['fueltype', 'aspiration', 'carbody', 'drivewheel', 'enginelocation', 'enginetype', 'fuelsystem', 'car_company'], axis =1)
 
 
-# In[49]:
+# In[47]:
 
 
 car_df.info()
@@ -394,19 +378,19 @@ car_df.info()
 
 # ## Performing the train_test_split operation 
 
-# In[50]:
+# In[48]:
 
 
 df_train, df_test = train_test_split(car_df, train_size = 0.7, test_size = 0.3, random_state = 100)
 
 
-# In[51]:
+# In[49]:
 
 
 df_train.shape
 
 
-# In[52]:
+# In[50]:
 
 
 df_test.shape
@@ -414,32 +398,32 @@ df_test.shape
 
 # ## Scaling the data using StandardScaler()
 
-# In[53]:
+# In[51]:
 
 
 cars_numeric.columns
 
 
-# In[54]:
+# In[52]:
 
 
 col_list = ['symboling', 'doornumber', 'wheelbase', 'carlength', 'carwidth','carheight', 'curbweight', 'cylindernumber', 'enginesize', 'boreratio',
             'stroke', 'compressionratio', 'horsepower', 'peakrpm', 'citympg', 'highwaympg', 'price']
 
 
-# In[55]:
+# In[53]:
 
 
 scaler = StandardScaler()
 
 
-# In[56]:
+# In[54]:
 
 
 df_train[col_list] = scaler.fit_transform(df_train[col_list])
 
 
-# In[57]:
+# In[55]:
 
 
 df_train.describe()
@@ -447,7 +431,7 @@ df_train.describe()
 
 # # Model Building
 
-# In[58]:
+# In[56]:
 
 
 y_train = df_train.pop('price')
@@ -456,7 +440,7 @@ X_train = df_train
 
 # ## Performing feature selection using Recursive Feature Elimination (RFE)
 
-# In[60]:
+# In[57]:
 
 
 from sklearn.feature_selection import RFE
@@ -472,13 +456,13 @@ rfe = RFE(estimator=lr, n_features_to_select=15)
 rfe.fit(X_train, y_train)
 
 
-# In[61]:
+# In[58]:
 
 
 list(zip(X_train.columns,rfe.support_,rfe.ranking_))
 
 
-# In[62]:
+# In[59]:
 
 
 cols = X_train.columns[rfe.support_]
@@ -487,38 +471,62 @@ cols
 
 # ## Model 1
 
-# In[75]:
+# In[92]:
 
 
-# Check data types of X_train to identify non-numeric columns
-print(X_train[cols].dtypes)
-
-# If any column is non-numeric, convert it to numeric (use encoding or dropping)
-X1 = X_train[cols]
-
-# Convert categorical columns to numeric using one-hot encoding
-X1 = pd.get_dummies(X1, drop_first=True)
-
-# Check if y_train is numeric
-print(f"y_train type: {y_train.dtype}")
-
-# Ensure y_train is numeric, and handle any non-numeric values by coercing them into NaN
-y_train = pd.to_numeric(y_train, errors='coerce')
-
-# Drop rows with NaN values in y_train or X1 (if any)
-X1 = X1.loc[~y_train.isna()]
-y_train = y_train.dropna()
-
-# Add constant (intercept) to features
-X1_sm = sm.add_constant(X1)
+print(X1_sm.dtypes)
+print(y_train.dtype)
 
 
+# In[93]:
 
-# Display the model summary
+
+X1 = X1.astype(float)
+
+
+# In[94]:
+
+
+# Drop any rows with NaNs in X1 or y_train
+combined = pd.concat([X1, y_train], axis=1).dropna()
+X1_clean = combined.drop(columns=y_train.name)
+y_clean = combined[y_train.name]
+
+# Add constant
+X1_sm = sm.add_constant(X1_clean)
+
+# Fit the model
+lr_1 = sm.OLS(y_clean, X1_sm).fit()
 print(lr_1.summary())
 
 
-# In[76]:
+# In[96]:
+
+
+X1 = pd.get_dummies(X_train[cols], drop_first=True)
+
+# Convert all columns to float (required for statsmodels OLS)
+X1 = X1.astype(float)
+
+# Ensure y_train is numeric
+y_train = pd.to_numeric(y_train, errors='coerce')
+
+# Remove rows with NaN values in y_train
+valid_idx = y_train.notna()
+X1 = X1.loc[valid_idx]
+y_train = y_train.loc[valid_idx]
+
+# Add constant (intercept)
+X1_sm = sm.add_constant(X1)
+
+# Fit the model
+lr_1 = sm.OLS(y_train, X1_sm).fit()
+
+# Show summary
+print(lr_1.summary())
+
+
+# In[97]:
 
 
 print(lr_1.summary())
@@ -526,20 +534,20 @@ print(lr_1.summary())
 
 # #### All the p- values are significant. Let us check VIF.
 
-# In[81]:
+# In[98]:
 
 
 X1 = X1.replace([np.inf, -np.inf], np.nan)  # Replace infinite values with NaN
 X1 = X1.fillna(X1.median())  # Replace NaN values with the median of each column
 
 
-# In[82]:
+# In[99]:
 
 
 X1 = X1.astype(int)
 
 
-# In[83]:
+# In[100]:
 
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -557,7 +565,7 @@ print(vif)
 
 # ### Now building the model with 10 variables.
 
-# In[86]:
+# In[101]:
 
 
 from sklearn.feature_selection import RFE
@@ -572,13 +580,13 @@ selected_features = X_train.columns[rfe2.support_]
 print(selected_features)
 
 
-# In[87]:
+# In[102]:
 
 
 list(zip(X_train.columns,rfe2.support_,rfe2.ranking_))
 
 
-# In[88]:
+# In[103]:
 
 
 supported_cols = X_train.columns[rfe2.support_]
@@ -587,19 +595,42 @@ supported_cols
 
 # ## Model 2
 
-# In[92]:
+# In[ ]:
 
 
-# Convert everything to float type (safe and compatible with statsmodels)
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[105]:
+
+
+# Assuming X2 is already defined (like a new set of features or filtered from X_train)
+X2 = pd.get_dummies(X_train[cols], drop_first=True)  # or however you define X2
+X2 = X2.astype(float)
+
+# Remove any rows where y_train is NaN
+valid_idx = y_train.notna()
+X2 = X2.loc[valid_idx]
+y_train_clean = y_train.loc[valid_idx].astype(float)  # safer to copy y_train into a clean variable
+
+# Add constant (intercept)
+X2_sm = sm.add_constant(X2)
 X2_sm = X2_sm.astype(float)
-y_train = y_train.astype(float)
 
-# Now fit the model
-model_2 = sm.OLS(y_train, X2_sm).fit()
+# Fit the model
+model_2 = sm.OLS(y_train_clean, X2_sm).fit()
+
+# Show summary
 print(model_2.summary())
 
 
-# In[93]:
+# In[106]:
 
 
 import statsmodels.api as sm
@@ -611,7 +642,7 @@ model_2 = sm.OLS(y_train, X2_sm).fit()
 print(model_2.summary())
 
 
-# In[94]:
+# In[107]:
 
 
 print(model_2.summary())
@@ -619,14 +650,14 @@ print(model_2.summary())
 
 # #### Now let us check the VIF for this model.
 
-# In[110]:
+# In[108]:
 
 
 non_numeric_cols = X2.select_dtypes(exclude=[np.number]).columns
 print("Non-numeric columns:\n", non_numeric_cols)
 
 
-# In[111]:
+# In[109]:
 
 
 for col in ['enginelocation_rear', 'enginetype_l', 'enginetype_ohcf',
@@ -635,7 +666,7 @@ for col in ['enginelocation_rear', 'enginetype_l', 'enginetype_ohcf',
     X2[col] = pd.to_numeric(X2[col], errors='coerce')
 
 
-# In[116]:
+# In[110]:
 
 
 import pandas as pd
@@ -669,31 +700,40 @@ print(vif.sort_values(by="VIF", ascending=False))
 
 # ## Model 3
 
-# In[118]:
+# In[112]:
 
 
-# Force everything to float64 to avoid dtype=object issues
+X3 = pd.get_dummies(X_train[cols], drop_first=True)  # or however you're defining X3
+X3 = X3.astype(float)
+
+# Clean y_train (remove NaNs)
+valid_idx = y_train.notna()
+X3 = X3.loc[valid_idx]
+y_train_clean = y_train.loc[valid_idx].astype(float)
+
+# Add constant to X3
+X3_sm = sm.add_constant(X3)
 X3_sm = X3_sm.astype(float)
-y_train = y_train.astype(float)
 
-# Now fit the model
-Model_3 = sm.OLS(y_train, X3_sm).fit()
+# Fit the model
+model_3 = sm.OLS(y_train_clean, X3_sm).fit()
+print(model_3.summary())
 
 
-# In[119]:
+# In[113]:
 
 
 print(X3_sm.dtypes)
 print(y_train.dtypes)
 
 
-# In[120]:
+# In[115]:
 
 
-print(Model_3.summary())
+print(model_3.summary())
 
 
-# In[127]:
+# In[116]:
 
 
 import numpy as np
@@ -750,29 +790,40 @@ print(vif)
 
 # ## Model 4
 
-# In[133]:
+# In[118]:
 
 
-# Convert Boolean columns to integers
+# Step 1: Create X4 (your feature set)
+X4 = pd.get_dummies(X_train[cols], drop_first=True)
+
+# Step 2: Add constant for intercept
+X4_sm = sm.add_constant(X4)
+
+# Step 3: Convert boolean columns to integers (0/1)
 X4_sm = X4_sm.apply(lambda col: col.astype(int) if col.dtype == 'bool' else col)
 
-# Check data types after conversion
-print("\nX4_sm data types after conversion:\n", X4_sm.dtypes)
+# Step 4: Convert everything to float (recommended for statsmodels)
+X4_sm = X4_sm.astype(float)
 
-# Now fit the OLS model
-model_4 = sm.OLS(y_train, X4_sm).fit()
+# Step 5: Clean y_train (remove NaNs)
+valid_idx = y_train.notna()
+X4_sm = X4_sm.loc[valid_idx]
+y_train_clean = y_train.loc[valid_idx].astype(float)
 
-# Print the model summary
+# Step 6: Fit model
+model_4 = sm.OLS(y_train_clean, X4_sm).fit()
+
+# Step 7: Show summary
 print(model_4.summary())
 
 
-# In[136]:
+# In[119]:
 
 
 print(model_4.summary())
 
 
-# In[138]:
+# In[120]:
 
 
 # Convert all boolean columns to integers (if any)
@@ -795,7 +846,7 @@ else:
 
 # ## Model 5
 
-# In[139]:
+# In[121]:
 
 
 X5 = X4.drop(['car_company_peugeot'], axis =1)
@@ -804,7 +855,7 @@ X5_sm = sm.add_constant(X5)
 Model_5 = sm.OLS(y_train,X5_sm).fit()
 
 
-# In[140]:
+# In[122]:
 
 
 print(Model_5.summary())
@@ -952,6 +1003,12 @@ r_squ
 # ## The variables which are significant in predicting the price of a car are: 
 
 # ### enginesize, carwidth, enginetype_rotor, car_company_bmw, enginelocation_rear, car_company_renault
+
+# In[1]:
+
+
+get_ipython().system('jupyter nbconvert --to script car_price_prediction.ipynb')
+
 
 # In[ ]:
 
