@@ -24,6 +24,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: List files and show current directory
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "Listing files:"
+          ls -la
+
       - name: Convert notebook to script
         run: jupyter nbconvert --to script car_price_prediction.ipynb
 
