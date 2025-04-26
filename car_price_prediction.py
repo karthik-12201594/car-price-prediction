@@ -5,7 +5,7 @@
 
 # ## Importing the required libraries
 
-# In[239]:
+# In[353]:
 
 
 import numpy as np
@@ -30,7 +30,7 @@ warnings.filterwarnings('ignore')
 
 # ## Importing the dataset
 
-# In[240]:
+# In[354]:
 
 
 cars_data = pd.read_csv("car_price_assignment.csv")
@@ -40,19 +40,19 @@ cars_data.head()
 
 # ## Analyzing the dataset
 
-# In[241]:
+# In[355]:
 
 
 cars_data.shape
 
 
-# In[242]:
+# In[356]:
 
 
 cars_data.info()
 
 
-# In[243]:
+# In[357]:
 
 
 cars_data.describe()
@@ -60,25 +60,25 @@ cars_data.describe()
 
 # # Data Cleaning
 
-# In[244]:
+# In[358]:
 
 
 cars_data.duplicated(subset = ['car_ID']).sum()
 
 
-# In[245]:
+# In[359]:
 
 
 cars_data = cars_data.drop(['car_ID'], axis =1)
 
 
-# In[246]:
+# In[360]:
 
 
 cars_data.isnull().sum()
 
 
-# In[247]:
+# In[361]:
 
 
 cars_data['symboling'].value_counts()
@@ -86,13 +86,13 @@ cars_data['symboling'].value_counts()
 
 # #### The 'symboling' column is represented as the insurance risk rating i.e; +3 indicates that the auto is risky, -3 that it is probably pretty safe.   
 
-# In[248]:
+# In[362]:
 
 
 sns.pairplot(y_vars = 'symboling', x_vars = 'price' ,data = cars_data)
 
 
-# In[249]:
+# In[363]:
 
 
 cars_data['CarName'].value_counts()
@@ -100,25 +100,25 @@ cars_data['CarName'].value_counts()
 
 # #### From the above data we can infer that the car name comprises of two parts i.e; the car company and the car model. 
 
-# In[250]:
+# In[364]:
 
 
 cars_data['car_company'] = cars_data['CarName'].apply(lambda x:x.split(' ')[0])
 
 
-# In[251]:
+# In[365]:
 
 
 cars_data.head()
 
 
-# In[252]:
+# In[366]:
 
 
 cars_data = cars_data.drop(['CarName'], axis =1)
 
 
-# In[253]:
+# In[367]:
 
 
 cars_data['car_company'].value_counts()
@@ -126,7 +126,7 @@ cars_data['car_company'].value_counts()
 
 # #### From the above data we can see that some of car_company names has been misspelled. Hence we need to fix it.
 
-# In[254]:
+# In[368]:
 
 
 cars_data['car_company'].replace('toyouta', 'toyota',inplace=True)
@@ -137,25 +137,25 @@ cars_data['car_company'].replace('vw', 'volkswagen',inplace=True)
 cars_data['car_company'].replace('porcshce', 'porsche',inplace=True)
 
 
-# In[255]:
+# In[369]:
 
 
 cars_data['car_company'].value_counts()
 
 
-# In[256]:
+# In[370]:
 
 
 cars_data['fueltype'].value_counts()
 
 
-# In[257]:
+# In[371]:
 
 
 cars_data['aspiration'].value_counts()
 
 
-# In[258]:
+# In[372]:
 
 
 cars_data['doornumber'].value_counts()
@@ -163,7 +163,7 @@ cars_data['doornumber'].value_counts()
 
 # #### Converting the doornumber variable into numeric variable
 
-# In[259]:
+# In[373]:
 
 
 def number_(x):
@@ -172,37 +172,37 @@ def number_(x):
 cars_data['doornumber'] = cars_data[['doornumber']].apply(number_)
 
 
-# In[260]:
+# In[374]:
 
 
 cars_data['doornumber'].value_counts()
 
 
-# In[261]:
+# In[375]:
 
 
 cars_data['carbody'].value_counts()
 
 
-# In[262]:
+# In[376]:
 
 
 cars_data['drivewheel'].value_counts()
 
 
-# In[263]:
+# In[377]:
 
 
 cars_data['enginelocation'].value_counts()
 
 
-# In[264]:
+# In[378]:
 
 
 cars_data['wheelbase'].value_counts().head()
 
 
-# In[265]:
+# In[ ]:
 
 
 sns.histplot(cars_data['wheelbase'])
@@ -472,55 +472,7 @@ cols
 
 # ## Model 1
 
-# In[296]:
-
-
-X1 = X1.astype(float)
-
-
-# In[ ]:
-
-
-# Drop any rows with NaNs in X1 or y_train
-combined = pd.concat([X1, y_train], axis=1).dropna()
-X1_clean = combined.drop(columns=y_train.name)
-y_clean = combined[y_train.name]
-
-# Add constant
-X1_sm = sm.add_constant(X1_clean)
-
-# Fit the model
-lr_1 = sm.OLS(y_clean, X1_sm).fit()
-print(lr_1.summary())
-
-
-# In[ ]:
-
-
-X1 = pd.get_dummies(X_train[cols], drop_first=True)
-
-# Convert all columns to float (required for statsmodels OLS)
-X1 = X1.astype(float)
-
-# Ensure y_train is numeric
-y_train = pd.to_numeric(y_train, errors='coerce')
-
-# Remove rows with NaN values in y_train
-valid_idx = y_train.notna()
-X1 = X1.loc[valid_idx]
-y_train = y_train.loc[valid_idx]
-
-# Add constant (intercept)
-X1_sm = sm.add_constant(X1)
-
-# Fit the model
-lr_1 = sm.OLS(y_train, X1_sm).fit()
-
-# Show summary
-print(lr_1.summary())
-
-
-# In[ ]:
+# In[352]:
 
 
 print(lr_1.summary())
@@ -528,20 +480,20 @@ print(lr_1.summary())
 
 # #### All the p- values are significant. Let us check VIF.
 
-# In[ ]:
+# In[301]:
 
 
 X1 = X1.replace([np.inf, -np.inf], np.nan)  # Replace infinite values with NaN
 X1 = X1.fillna(X1.median())  # Replace NaN values with the median of each column
 
 
-# In[ ]:
+# In[302]:
 
 
 X1 = X1.astype(int)
 
 
-# In[ ]:
+# In[303]:
 
 
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -559,7 +511,7 @@ print(vif)
 
 # ### Now building the model with 10 variables.
 
-# In[ ]:
+# In[304]:
 
 
 from sklearn.feature_selection import RFE
@@ -574,13 +526,13 @@ selected_features = X_train.columns[rfe2.support_]
 print(selected_features)
 
 
-# In[ ]:
+# In[305]:
 
 
 list(zip(X_train.columns,rfe2.support_,rfe2.ranking_))
 
 
-# In[ ]:
+# In[306]:
 
 
 supported_cols = X_train.columns[rfe2.support_]
@@ -601,7 +553,7 @@ supported_cols
 
 
 
-# In[105]:
+# In[307]:
 
 
 # Assuming X2 is already defined (like a new set of features or filtered from X_train)
@@ -624,7 +576,7 @@ model_2 = sm.OLS(y_train_clean, X2_sm).fit()
 print(model_2.summary())
 
 
-# In[106]:
+# In[308]:
 
 
 import statsmodels.api as sm
@@ -636,7 +588,7 @@ model_2 = sm.OLS(y_train, X2_sm).fit()
 print(model_2.summary())
 
 
-# In[107]:
+# In[309]:
 
 
 print(model_2.summary())
@@ -644,14 +596,14 @@ print(model_2.summary())
 
 # #### Now let us check the VIF for this model.
 
-# In[108]:
+# In[310]:
 
 
 non_numeric_cols = X2.select_dtypes(exclude=[np.number]).columns
 print("Non-numeric columns:\n", non_numeric_cols)
 
 
-# In[109]:
+# In[311]:
 
 
 for col in ['enginelocation_rear', 'enginetype_l', 'enginetype_ohcf',
@@ -660,7 +612,7 @@ for col in ['enginelocation_rear', 'enginetype_l', 'enginetype_ohcf',
     X2[col] = pd.to_numeric(X2[col], errors='coerce')
 
 
-# In[110]:
+# In[312]:
 
 
 import pandas as pd
@@ -694,7 +646,7 @@ print(vif.sort_values(by="VIF", ascending=False))
 
 # ## Model 3
 
-# In[112]:
+# In[313]:
 
 
 X3 = pd.get_dummies(X_train[cols], drop_first=True)  # or however you're defining X3
@@ -714,20 +666,20 @@ model_3 = sm.OLS(y_train_clean, X3_sm).fit()
 print(model_3.summary())
 
 
-# In[113]:
+# In[314]:
 
 
 print(X3_sm.dtypes)
 print(y_train.dtypes)
 
 
-# In[115]:
+# In[315]:
 
 
 print(model_3.summary())
 
 
-# In[116]:
+# In[316]:
 
 
 import numpy as np
@@ -784,7 +736,7 @@ print(vif)
 
 # ## Model 4
 
-# In[118]:
+# In[317]:
 
 
 # Step 1: Create X4 (your feature set)
@@ -811,13 +763,13 @@ model_4 = sm.OLS(y_train_clean, X4_sm).fit()
 print(model_4.summary())
 
 
-# In[119]:
+# In[318]:
 
 
 print(model_4.summary())
 
 
-# In[120]:
+# In[319]:
 
 
 # Convert all boolean columns to integers (if any)
@@ -840,7 +792,7 @@ else:
 
 # ## Model 5
 
-# In[121]:
+# In[320]:
 
 
 X5 = X4.drop(['car_company_peugeot'], axis =1)
@@ -849,13 +801,13 @@ X5_sm = sm.add_constant(X5)
 Model_5 = sm.OLS(y_train,X5_sm).fit()
 
 
-# In[122]:
+# In[321]:
 
 
 print(Model_5.summary())
 
 
-# In[123]:
+# In[322]:
 
 
 vif = pd.DataFrame()
@@ -870,7 +822,7 @@ vif
 
 # ## Model 6
 
-# In[124]:
+# In[323]:
 
 
 X6 = X5.drop(['enginetype_l'], axis =1)
@@ -879,13 +831,13 @@ X6_sm = sm.add_constant(X6)
 Model_6 = sm.OLS(y_train,X6_sm).fit()
 
 
-# In[125]:
+# In[324]:
 
 
 print(Model_6.summary())
 
 
-# In[126]:
+# In[325]:
 
 
 vif = pd.DataFrame()
@@ -900,20 +852,20 @@ vif
 
 # # Residual Analysis
 
-# In[127]:
+# In[326]:
 
 
 y_train_pred = Model_6.predict(X6_sm)
 y_train_pred.head()
 
 
-# In[128]:
+# In[327]:
 
 
 Residual = y_train- y_train_pred
 
 
-# In[129]:
+# In[328]:
 
 
 sns.histplot(Residual, bins =15)
@@ -921,26 +873,26 @@ sns.histplot(Residual, bins =15)
 
 # ### Now we need to make predictions on our model.
 
-# In[130]:
+# In[329]:
 
 
 df_test[col_list] = scaler.transform(df_test[col_list])
 
 
-# In[131]:
+# In[330]:
 
 
 y_test = df_test.pop('price')
 X_test = df_test
 
 
-# In[132]:
+# In[331]:
 
 
 final_cols = X6.columns
 
 
-# In[133]:
+# In[332]:
 
 
 import statsmodels.api as sm
@@ -957,25 +909,25 @@ X_test_model6 = X_test[final_cols]
 X_test_model6.head()
 
 
-# In[134]:
+# In[333]:
 
 
 X_test_sm = sm.add_constant(X_test_model6)
 
 
-# In[135]:
+# In[334]:
 
 
 y_pred = Model_6.predict(X_test_sm)
 
 
-# In[136]:
+# In[335]:
 
 
 y_pred.head()
 
 
-# In[137]:
+# In[336]:
 
 
 plt.scatter(y_test, y_pred)
@@ -987,7 +939,7 @@ plt.ylabel('y_pred')
 
 # # Model Evaluation
 
-# In[138]:
+# In[337]:
 
 
 r_squ = r2_score(y_test,y_pred)
@@ -998,7 +950,7 @@ r_squ
 
 # ### enginesize, carwidth, enginetype_rotor, car_company_bmw, enginelocation_rear, car_company_renault
 
-# In[139]:
+# In[338]:
 
 
 get_ipython().system('jupyter nbconvert --to script car_price_prediction.ipynb')
